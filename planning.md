@@ -20,16 +20,19 @@
 
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 | ISU Dining — Meal Plans & Rates | Official plan names, prices, what each includes, and which halls require a plan | https://www.dining.iastate.edu/meal-plans/ |
+| 2 | ISU Dining — Flex Meals, Dining Dollars & GET&Go Explained | How meal swipes, Dining Dollars, Express, and Flex Meals differ and their dollar values | https://www.dining.iastate.edu/meal-plans/flex-meals-dining-dollars-explained-2/  |
+| 3 | ISU Dining — Meal Plan FAQs | Q&A on what's included, where plans work, balances, to-go/order-ahead, sick meals | https://www.dining.iastate.edu/meal-plans/faqs/  |
+| 4 | ISU Dining — Nutrition | NetNutrition, ingredient/allergen labels, QR codes, registered-dietitian "Let's Talk" | https://www.dining.iastate.edu/nutrition/  |
+| 5 | ISU Dining — Accommodations / Special Diet Kitchen | Special Diet Kitchen, top-9 allergen / gluten-free / dairy-free / vegan / halal options, how to request | https://www.dining.iastate.edu/nutrition/accommodations/ |
+| 6 | ISU Dining — Union Drive Marketplace | A dining-center page: payment types accepted, menu filters, allergen disclaimer | https://www.dining.iastate.edu/location/union-drive-marketplace-2-2/  |
+| 7 | ISU Student Health & Wellness — Nutrition & Body Image (Joyful Eating) | Non-diet / Health at Every Size approach, campus dietitian, meal-planning & grocery budgeting, eating-disorder support, how to book | https://cyclonehealth.iastate.edu/nutrition-body-image  |
+| 8 | Iowa State Daily — ISU students share favorite campus dining spots | Student quotes on best dining halls/foods (UDM tacos, Fuse bowls, Friley Windows, Seasons) and meal-plan convenience | https://iowastatedaily.com/320101/news-student-life/isu-students-share-favorite-campus-dining-spots/  |
+| 9 | Iowa State Daily — Dietitian on campus works to help boost healthy eating | Reporting on special-diet support and the push for a campus dietitian; staff quotes on healthy eating | https://iowastatedaily.com/127879/news/dietitian-on-campus-works-to-help-boost-healthy-eating/  |
+| 10 | Iowa State Daily — Know your grocery shopping options in Ames | Guide to Aldi, Hy-Vee, Fareway, Wheatsfield co-op, Dahl's — prices, locations, what each is good for | https://iowastatedaily.com/149775/special-sections/know-your-grocery-shopping-options-in-ames/ |
+| 11 | Iowa State Daily — Campus dining for all ISU students | Overview of every dining center (Conversations, Seasons, Knapp-Storms, UDCC) and their food stations | https://iowastatedaily.com/135432/special-sections/campus-dining-for-all-isu-students/ |
+| 12 | Dr. Rachel Paul — Eating Healthy in a College Cafeteria | Concrete dining-hall technique: plate method, salad-bar formula, station-by-station (grill, soups, pizza, breakfast) | https://www.drrachelpaul.com/blog/eating-healthy-in-a-college-cafeteria/|
+| 13 | SNHU — How to Eat Healthy in College: 15 Tips to Avoid the "Freshman 15" | Campus-dietitian's 15 tips: power nutrients, portions, hydration, not skipping meals, sleep, stress, using campus resources | https://www.snhu.edu/about-us/newsroom/health/how-to-eat-healthy-in-college-and-avoid-freshman-15  |
 
 ---
 
