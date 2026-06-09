@@ -20,9 +20,13 @@ import requests
 import trafilatura
 from lxml import html as lhtml
 
-# --- config (matches planning.md Chunking Strategy: 600 chars / 100 overlap) ---
-CHUNK_SIZE = 600
-CHUNK_OVERLAP = 100
+# --- config (planning.md Chunking Strategy) ---
+# Started at 600/100, but Milestone-4 retrieval testing showed 600 split key facts
+# across boundaries (Dr. Rachel Paul's salad-bar formula) and fragmented conversational
+# reviews, leaving their source out of the top-4 for Q3/Q5. Raised to 1100/180, which
+# puts every eval query's expected source in the top-4 with all distances < 0.5.
+CHUNK_SIZE = 1100
+CHUNK_OVERLAP = 180
 
 RAW_DIR = "documents/raw"
 CLEAN_DIR = "documents/clean"

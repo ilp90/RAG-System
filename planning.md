@@ -53,17 +53,19 @@ A new or budget-conscious student asking "how do I eat healthy on my meal plan w
      numbers fit the structure of your documents.
      A review-heavy corpus warrants different chunking than a long FAQ. -->
 
-**Chunk size:** ~600 characters (≈150 tokens)
+**Chunk size:** ~1100 characters (≈275 tokens) — *revised up from 600 after Milestone-4 retrieval testing (see below)*
 
-**Overlap:** 100 characters (≈17%)
+**Overlap:** 180 characters (≈16%)
 
 **Reasoning:**
 
 My corpus is **prose-heavy, not review-heavy** — it's FAQ Q&A pairs, news articles, official dining policy pages, and how-to guides. There are almost no 1–3 sentence reviews, so the tiny (~200-char) chunks you'd use for an opinion-review corpus would be wrong here: they'd slice a single FAQ answer or a dietitian's salad-bar formula into fragments that mean nothing on their own.
 
-600 characters is roughly one complete FAQ answer or one paragraph of guide text — large enough to hold a self-contained idea (e.g., Dr. Rachel Paul's full "salad-bar formula": 2 cups veg + 1 protein + 100–200 cal fat), but small enough that retrieval stays precise and the LLM isn't fed a wall of unrelated text.
+I **started at 600 characters** (≈ one FAQ answer or one guide paragraph), reasoning that smaller chunks keep retrieval precise. That worked well for the self-contained FAQ Q&A queries (Q2, Q4) but **failed exactly where I'd predicted in Anticipated Challenges #1**: when I tested retrieval against my 5 eval queries, Dr. Rachel Paul's salad-bar formula (Q1) was split across two adjacent chunks — "2 cups greens" in one, the protein/fat amounts in the next — so neither chunk alone answered the question, and the conversational student-favorites reviews (Q5) were fragmented away from their framing, leaving their source out of the top-4.
 
-The 100-character overlap exists because key facts often sit right at a paragraph boundary — for example, a meal-plan name in one sentence and its price in the next. Overlap means a fact that lands near a chunk edge still appears intact in at least one chunk, so it stays retrievable instead of being split where neither half is findable.
+I ran a chunk-size sweep (600 / 800 / 900 / 1000 / 1100 / 1200) and measured, per eval query, the best distance and whether the expected source landed in the top-4. **1100 characters was the sweet spot:** all five queries put their expected source in the top-4 with every #1-result distance < 0.5, the salad-bar formula now sits intact in a single chunk, and the corpus stays at 52 chunks (above the 50-chunk floor). Going larger (1200) pushed Q1's best distance over 0.5 and dropped below 50 chunks; going smaller left Q3/Q5 sources outside the top-4.
+
+The 180-character overlap (~16%, same ratio as before) keeps a fact that lands near a chunk edge intact in at least one chunk, so a meal-plan name and its price aren't split where neither half is findable.
 
 **How I'll know if I got it wrong:**
 - *Too small:* answers come back missing context — the system retrieves "the price is $X" but not which plan it belongs to, because the plan name was chunked separately.
@@ -139,7 +141,7 @@ I picked **top-k = 4** because a good answer here often needs to combine perspec
 ```mermaid
 flowchart LR
     A["1. Document Ingestion<br/>(13 sources → documents/)<br/><i>requests + trafilatura<br/>(boilerplate stripping;<br/>lxml for accordion Q&A)</i>"]
-      --> B["2. Chunking<br/>~600 chars, 100 overlap<br/><i>custom chunk_text()</i>"]
+      --> B["2. Chunking<br/>~1100 chars, 180 overlap<br/><i>custom chunk_text()</i>"]
       --> C["3. Embedding + Vector Store<br/><i>all-MiniLM-L6-v2<br/>(sentence-transformers)<br/>→ ChromaDB</i>"]
       --> D["4. Retrieval<br/>top-k = 4 by cosine similarity<br/><i>ChromaDB query</i>"]
       --> E["5. Generation<br/>grounded answer + source attribution<br/><i>Groq LLM API</i>"]
@@ -152,7 +154,7 @@ flowchart LR
 | Stage | Tool / library |
 |-------|----------------|
 | Document Ingestion | `requests` (fetch) + `trafilatura` (main-content extraction); `lxml` to recover accordion Q&A |
-| Chunking | custom `chunk_text()` — 600 chars, 100 overlap |
+| Chunking | custom `chunk_text()` — 1100 chars, 180 overlap |
 | Embedding | `all-MiniLM-L6-v2` via `sentence-transformers` |
 | Vector Store | ChromaDB (cosine similarity) |
 | Retrieval | ChromaDB query, top-k = 4 |
@@ -181,14 +183,14 @@ flowchart LR
   - trafilatura dropped the ISU FAQ/plan content because it lives in JS-style **accordion** markup → added an `lxml` extractor (`extract_accordions()`) that pairs each `accordion-button` question with its `accordion-body` answer, so Q&A pairs stay intact.
   - Source **#2 redirects to the same FAQ page as #3** (identical content) → added exact-duplicate chunk de-duplication so the duplicates don't waste retrieval slots. *(Consider swapping #2 for a distinct source later.)*
   - No `.pdf` sources after all, so pdfplumber wasn't needed.
-- *Verified output:* 84 chunks across 12 fetched sources (SNHU #13 pasted in manually), lengths 235–693 chars (avg 561), 0 empty chunks, no HTML artifacts; spot-checked that the Flex-Meals-vs-Dining-Dollars answer (Q2) and Dr. Rachel Paul salad-bar formula (Q1) each sit intact in a single chunk.
+- *Verified output:* all 13 sources ingested (SNHU #13 fetched via Googlebot UA, pasted to `documents/manual/snhu.txt`), 0 empty chunks, no HTML artifacts. Initial run produced 86 chunks at 600/100; **chunk size was later revised to 1100/180 during Milestone 4** (see Chunking Strategy), yielding the final **52 chunks** (avg 1024, max 1276) in `chunks.json`.
 
-**Milestone 4 — Embedding and retrieval:**
+**Milestone 4 — Embedding and retrieval:** *(built — see [retrieval.py](retrieval.py))*
 
 - *Tool:* Claude.
-- *Input I'll give it:* my **Retrieval Approach** section (all-MiniLM-L6-v2, ChromaDB, top-k = 4) and the chunk format from Milestone 3.
-- *What I expect it to produce:* an `embed_and_store()` that encodes chunks with `sentence-transformers` and writes them (with source metadata) into a ChromaDB collection, and a `retrieve(query, k=4)` that embeds the query and returns the 4 nearest chunks with their sources and scores.
-- *How I'll verify:* run my 5 evaluation questions as retrieval-only queries and check that the chunk that *should* answer each (per the "Source it should retrieve from" column) actually appears in the top-4. If not, that signals a chunking or embedding problem, not a generation one.
+- *Input I gave it:* my **Retrieval Approach** section (all-MiniLM-L6-v2, ChromaDB, top-k = 4) and the chunk format from Milestone 3.
+- *What it produced:* `retrieval.py` with `build_index()` (encodes chunks with `sentence-transformers`, normalized embeddings, into a persistent ChromaDB collection configured for **cosine** distance, with `source_name` / `source` / `chunk_index` metadata) and `retrieve(query, k=4)` (embeds the query, returns the k nearest chunks with source + distance). A `test_retrieval()` runs all 5 eval queries and prints ranked chunks + distances.
+- *What I verified / changed:* ran the 5 eval queries as retrieval-only checks. At 600/100, **Q3 (Special Diet Kitchen) and Q5 (student favorites) had their expected source outside the top-4**, and Q1's salad-bar formula was split across two chunks. I ran a chunk-size sweep and **raised chunking to 1100/180** (documented in Chunking Strategy); after rebuilding the index, all five queries return their expected source in the top-4 with every #1-result cosine distance < 0.5 (Q1 0.485, Q2 0.221, Q3 0.242, Q4 0.258, Q5 0.341). Q5 remains the weakest (its conversational reviews retrieve, but the strongest "favorites" quote isn't always the top #8 chunk) — flagged for the README failure analysis.
 
 **Milestone 5 — Generation and interface:**
 
