@@ -16,5 +16,8 @@ env/
 chroma_db/
 chroma/
 
+# Raw fetched HTML (noise — cleaned text in documents/clean/ is committed instead)
+documents/raw/
+
 # macOS
 .DS_Store

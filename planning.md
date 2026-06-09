@@ -138,7 +138,7 @@ I picked **top-k = 4** because a good answer here often needs to combine perspec
 
 ```mermaid
 flowchart LR
-    A["1. Document Ingestion<br/>(13 sources → documents/)<br/><i>Python + pdfplumber/requests,<br/>HTML/boilerplate stripping</i>"]
+    A["1. Document Ingestion<br/>(13 sources → documents/)<br/><i>requests + trafilatura<br/>(boilerplate stripping;<br/>lxml for accordion Q&A)</i>"]
       --> B["2. Chunking<br/>~600 chars, 100 overlap<br/><i>custom chunk_text()</i>"]
       --> C["3. Embedding + Vector Store<br/><i>all-MiniLM-L6-v2<br/>(sentence-transformers)<br/>→ ChromaDB</i>"]
       --> D["4. Retrieval<br/>top-k = 4 by cosine similarity<br/><i>ChromaDB query</i>"]
@@ -151,7 +151,7 @@ flowchart LR
 
 | Stage | Tool / library |
 |-------|----------------|
-| Document Ingestion | Python (`requests`/`pdfplumber`), HTML & boilerplate stripping |
+| Document Ingestion | `requests` (fetch) + `trafilatura` (main-content extraction); `lxml` to recover accordion Q&A |
 | Chunking | custom `chunk_text()` — 600 chars, 100 overlap |
 | Embedding | `all-MiniLM-L6-v2` via `sentence-transformers` |
 | Vector Store | ChromaDB (cosine similarity) |
@@ -172,12 +172,16 @@ flowchart LR
      "I'll give Claude my Chunking Strategy section and ask it to implement chunk_text()
      with my specified chunk size and overlap" is a plan. -->
 
-**Milestone 3 — Ingestion and chunking:**
+**Milestone 3 — Ingestion and chunking:** *(built — see [ingest.py](ingest.py))*
 
 - *Tool:* Claude (in this Claude Code session).
-- *Input I'll give it:* my **Chunking Strategy** section (600 chars / 100 overlap, the preprocessing notes) plus my **Documents** table, and the requirement that the loader handle HTML pages and any `.pdf` files in `documents/`.
-- *What I expect it to produce:* a `load_documents()` that reads each file, strips HTML/boilerplate, and returns clean text + source metadata; and a `chunk_text(text, size=600, overlap=100)` that returns chunks carrying their source label.
-- *How I'll verify:* run it on 2–3 of my actual sources and eyeball the chunks — confirm a full FAQ answer or the Dr. Rachel Paul salad-bar formula stays intact in one chunk and isn't sliced mid-sentence. If chunks look fragmented I'll adjust size/overlap and update the Chunking section.
+- *Input I gave it:* my **Chunking Strategy** section (600 chars / 100 overlap, the preprocessing notes) plus my **Documents** table.
+- *What it produced:* `ingest.py` with `fetch_html()` (browser User-Agent), `clean_text_from_html()` (trafilatura main-content extraction + entity/whitespace cleanup), `load_documents()` (returns clean text + source metadata, writes `documents/clean/*.txt`), and `chunk_text(text, size=600, overlap=100)` (boundary-aware, packs whole paragraphs/Q&A pairs, carries a 100-char overlap, filters empties). Output → `chunks.json`.
+- *What I changed / discovered during verification:*
+  - trafilatura dropped the ISU FAQ/plan content because it lives in JS-style **accordion** markup → added an `lxml` extractor (`extract_accordions()`) that pairs each `accordion-button` question with its `accordion-body` answer, so Q&A pairs stay intact.
+  - Source **#2 redirects to the same FAQ page as #3** (identical content) → added exact-duplicate chunk de-duplication so the duplicates don't waste retrieval slots. *(Consider swapping #2 for a distinct source later.)*
+  - No `.pdf` sources after all, so pdfplumber wasn't needed.
+- *Verified output:* 84 chunks across 12 fetched sources (SNHU #13 pasted in manually), lengths 235–693 chars (avg 561), 0 empty chunks, no HTML artifacts; spot-checked that the Flex-Meals-vs-Dining-Dollars answer (Q2) and Dr. Rachel Paul salad-bar formula (Q1) each sit intact in a single chunk.
 
 **Milestone 4 — Embedding and retrieval:**
 
