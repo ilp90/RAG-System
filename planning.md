@@ -31,7 +31,7 @@ A new or budget-conscious student asking "how do I eat healthy on my meal plan w
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
 | 1 | ISU Dining — Meal Plans & Rates | Official plan names, prices, what each includes, and which halls require a plan | https://www.dining.iastate.edu/meal-plans/ |
-| 2 | ISU Dining — Flex Meals, Dining Dollars & GET&Go Explained | How meal swipes, Dining Dollars, Express, and Flex Meals differ and their dollar values | https://www.dining.iastate.edu/meal-plans/flex-meals-dining-dollars-explained-2/  |
+| 2 | ISU Dining — Sustainability | Green dining practices: composting, 10% local purchasing, reusable-cup discount, food-waste reduction | https://www.dining.iastate.edu/sustainability/  |
 | 3 | ISU Dining — Meal Plan FAQs | Q&A on what's included, where plans work, balances, to-go/order-ahead, sick meals | https://www.dining.iastate.edu/meal-plans/faqs/  |
 | 4 | ISU Dining — Nutrition | NetNutrition, ingredient/allergen labels, QR codes, registered-dietitian "Let's Talk" | https://www.dining.iastate.edu/nutrition/  |
 | 5 | ISU Dining — Accommodations / Special Diet Kitchen | Special Diet Kitchen, top-9 allergen / gluten-free / dairy-free / vegan / halal options, how to request | https://www.dining.iastate.edu/nutrition/accommodations/ |

@@ -38,8 +38,8 @@ USER_AGENT = (
 SOURCES = [
     {"id": 1,  "name": "ISU Dining — Meal Plans & Rates",
      "url": "https://www.dining.iastate.edu/meal-plans/"},
-    {"id": 2,  "name": "ISU Dining — Flex Meals, Dining Dollars & GET&Go Explained",
-     "url": "https://www.dining.iastate.edu/meal-plans/flex-meals-dining-dollars-explained-2/"},
+    {"id": 2,  "name": "ISU Dining — Sustainability",
+     "url": "https://www.dining.iastate.edu/sustainability/"},
     {"id": 3,  "name": "ISU Dining — Meal Plan FAQs",
      "url": "https://www.dining.iastate.edu/meal-plans/faqs/"},
     {"id": 4,  "name": "ISU Dining — Nutrition",
